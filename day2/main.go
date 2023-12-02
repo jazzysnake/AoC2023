@@ -85,6 +85,28 @@ func validGame(game Game, maxRed, maxGreen, maxBlue int) bool {
   return true
 }
 
+func minCubeSet(game Game) Draw {
+  maxRed := 0
+  maxGreen := 0
+  maxBlue := 0
+  for _, draw := range game.draws {
+    if maxGreen < draw.greens {
+      maxGreen = draw.greens
+    }
+    if maxBlue < draw.blues {
+      maxBlue = draw.blues
+    }
+    if maxRed < draw.reds {
+      maxRed = draw.reds
+    }
+  }
+  return Draw{maxRed, maxGreen, maxBlue}
+}
+
+func cubePower(draw Draw) int {
+  return draw.reds * draw.blues * draw.greens
+}
+
 func main() {
 	file, err := os.Open("input.txt")
 	if err != nil {
@@ -97,9 +119,11 @@ func main() {
 	for scanner.Scan() {
     txt := scanner.Text()
 		game := parseGame(txt)
-    if validGame(game, 12,13,14) {
-      sum += game.id
-    }
+    // part1 commented out
+    // if validGame(game, 12,13,14) {
+    //   sum += game.id
+    // }
+    sum += cubePower(minCubeSet(game))
 	}
 
 	if err := scanner.Err(); err != nil {
